@@ -1,3 +1,5 @@
+module CreditCardNumber where
+
 -- | Converts positive Integers to a reverted list of digits
 --
 -- ==== __Examples__

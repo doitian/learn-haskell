@@ -1,3 +1,3 @@
 import Test.DocTest
 
-main = doctest ["-isrc", "src/CreditCardNumber.hs"]
+main = doctest ["-isrc", "src/CreditCardNumber.hs", "src/Hanoi.hs"]
