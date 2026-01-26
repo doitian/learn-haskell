@@ -20,8 +20,9 @@ toDigitsRev n
 
 toDigitsRev' n
   | n < 10 = [n]
-  | otherwise = let (q, r) = n `quotRem` 10
-                in r : toDigitsRev' q
+  | otherwise =
+      let (q, r) = n `quotRem` 10
+       in r : toDigitsRev' q
 
 -- | Doubles every other num from left to right
 --
@@ -33,7 +34,7 @@ toDigitsRev' n
 -- >>> doubleEveryOther [1,2,3]
 -- [1,4,3]
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther = zipWith ($) (cycle [id, (*2)])
+doubleEveryOther = zipWith ($) (cycle [id, (* 2)])
 
 -- | Computes sum of all digits.
 --
@@ -54,5 +55,6 @@ sumDigits = sum . map (sum . toDigitsRev)
 -- >>> validate 4012888888881882
 -- False
 validate :: Integer -> Bool
-validate n = checksum n `mod` 10 == 0 where
+validate n = checksum n `mod` 10 == 0
+  where
     checksum = sumDigits . doubleEveryOther . toDigitsRev
