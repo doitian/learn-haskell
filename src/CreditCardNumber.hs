@@ -11,7 +11,7 @@
 -- >>> toDigits (-17)
 -- []
 toDigits :: Integer -> [Integer]
-toDigits n = reverse (toDigitsRev n)
+toDigits = reverse . toDigitsRev
 
 -- | Converts positive Integers to a reverted list of digits
 --
@@ -35,4 +35,17 @@ toDigitsRev n
 
 toDigitsRev' n
   | n < 10 = [n]
-  | otherwise = r : toDigitsRev' q where (q, r) = n `quotRem` 10
+  | otherwise = let (q, r) = n `quotRem` 10
+                in r : toDigitsRev' q
+
+-- | Double every other num from right to left
+--
+-- ==== __Examples__
+--
+-- >>> doubleEveryOther [8,7,6,5]
+-- [16,7,12,5]
+--
+-- >>> doubleEveryOther [1,2,3]
+-- [1,4,3]
+doubleEveryOther :: [Integer] -> [Integer]
+doubleEveryOther = reverse . zipWith ($) (cycle [id, (*2)]) . reverse
