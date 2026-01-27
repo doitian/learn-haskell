@@ -24,5 +24,5 @@ hanoi4 1 a b _ _ = [(a, b)]
 hanoi4 2 a b c _ = [(a, c), (a, b), (c, b)]
 hanoi4 3 a b c d = [(a, c), (a, d), (a, b), (d, b), (c, b)]
 hanoi4 n a b c d =
-  let k = (floor . sqrt . fromIntegral) (2 * n)
+  let k = (round . sqrt . fromIntegral) (2 * n + 1) - 1
    in hanoi4 (n - k) a d b c ++ hanoi k a b c ++ hanoi4 (n - k) d b a c
