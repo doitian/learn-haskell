@@ -5,5 +5,6 @@ main =
     [ "-isrc",
       "src/CreditCardNumber.hs",
       "src/Hanoi.hs",
-      "src/LogAnalysis.hs"
+      "src/LogAnalysis.hs",
+      "src/Golf.hs"
     ]
