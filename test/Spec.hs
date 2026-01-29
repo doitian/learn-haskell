@@ -7,5 +7,6 @@ main =
       "src/Hanoi.hs",
       "src/LogAnalysis.hs",
       "src/Golf.hs",
-      "src/Homework4.hs"
+      "src/Homework4.hs",
+      "src/Calc.hs"
     ]
