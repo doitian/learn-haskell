@@ -1,7 +1,10 @@
+{-# LANGUAGE TypeSynonymInstances #-}
+
 module Calc where
 
 import Data.Char
 import Parser
+import qualified StackVM
 
 data ExprT
   = Lit Integer
@@ -59,3 +62,17 @@ instance Expr Mod7 where
   lit = Mod7 . (`mod` 7)
   add (Mod7 x) (Mod7 y) = Mod7 $ (x + y) `mod` 7
   mul (Mod7 x) (Mod7 y) = Mod7 $ (x * y) `mod` 7
+
+instance Expr StackVM.Program where
+  lit value = [StackVM.PushI value]
+  add x y = x ++ y ++ [StackVM.Add]
+  mul x y = x ++ y ++ [StackVM.Mul]
+
+-- |
+-- >>> fmap StackVM.stackVM . compile $ "(3 * -4) + 5"
+-- Just (Right (IVal (-7)))
+--
+-- >>> compile $ "(3 * -4) + 5"
+-- Just [PushI 3,PushI (-4),Mul,PushI 5,Add]
+compile :: String -> Maybe StackVM.Program
+compile = parseExp lit add mul
