@@ -3,6 +3,7 @@
 module Calc where
 
 import Data.Char
+import qualified Data.Map as M
 import Parser
 import qualified StackVM
 
@@ -76,3 +77,42 @@ instance Expr StackVM.Program where
 -- Just [PushI 3,PushI (-4),Mul,PushI 5,Add]
 compile :: String -> Maybe StackVM.Program
 compile = parseExp lit add mul
+
+class HasVars a where
+  var :: String -> a
+
+-- |
+-- >>> add (lit 3) (var "x") :: VarExprT
+-- VarAdd (VarLit 3) (Var "x")
+data VarExprT
+  = VarLit Integer
+  | VarAdd VarExprT VarExprT
+  | VarMul VarExprT VarExprT
+  | Var String
+  deriving (Show, Eq)
+
+instance Expr VarExprT where
+  lit = VarLit
+  add = VarAdd
+  mul = VarMul
+
+instance HasVars VarExprT where
+  var = Var
+
+instance HasVars (M.Map String Integer -> Maybe Integer) where
+  var = M.lookup
+
+instance Expr (M.Map String Integer -> Maybe Integer) where
+  lit = const . Just
+  add = liftA2 $ liftA2 (+)
+  mul = liftA2 $ liftA2 (*)
+
+-- |
+-- >>> withVars [("x", 6)] $ add (lit 3) (var "x")
+-- Just 9
+-- >>> withVars [("x", 6)] $ add (lit 3) (var "y")
+-- Nothing
+-- >>> withVars [("x", 6), ("y", 3)] $ mul (var "x") (add (var "y") (var "x"))
+-- Just 54
+withVars :: [(String, Integer)] -> (M.Map String Integer -> Maybe Integer) -> Maybe Integer
+withVars vs exp = exp $ M.fromList vs
