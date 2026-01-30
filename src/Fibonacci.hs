@@ -40,6 +40,15 @@ streamRepeat = Cons <*> streamRepeat
 streamMap :: (a -> b) -> Stream a -> Stream b
 streamMap f (Cons x xs) = Cons (f x) $ streamMap f xs
 
+instance Functor Stream where
+  fmap = streamMap
+
+instance Applicative Stream where
+  pure = streamRepeat
+
+  -- Pairwise applicative
+  (Cons f fs) <*> (Cons x xs) = Cons (f x) $ (fs <*> xs)
+
 -- | >>> streamTake 3 . streamFromSeed (*2) $ 1
 -- [1,2,4]
 streamFromSeed :: (a -> a) -> a -> Stream a
@@ -93,7 +102,7 @@ instance Num (Stream Integer) where
 
   negate = streamMap negate
 
-  (Cons a as) + (Cons b bs) = Cons (a + b) $ as + bs
+  (+) = liftA2 (+)
 
   (Cons a as) * (Cons b bs) = Cons (a * b) $ (fromInteger a) * bs + as * (Cons b bs)
 
