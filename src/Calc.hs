@@ -2,7 +2,6 @@
 
 module Calc where
 
-import Data.Char
 import qualified Data.Map as M
 import Parser
 import qualified StackVM
@@ -27,9 +26,7 @@ eval (Mul x y) = eval x * eval y
 -- >>> evalStr "2+3*"
 -- Nothing
 evalStr :: String -> Maybe Integer
-evalStr str = case parseExp Lit Add Mul str of
-  Just expr -> Just (eval expr)
-  Nothing -> Nothing
+evalStr = fmap eval . parseExp Lit Add Mul
 
 class Expr a where
   lit :: Integer -> a

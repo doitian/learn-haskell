@@ -22,9 +22,9 @@ data MessageTree
 --
 -- >>> parseMessage "I 29 la la la"
 -- LogMessage Info 29 "la la la"
-
+--
 -- >>> parseMessage "This is not in the right format"
--- Unknown "This is not in the right format
+-- Unknown "This is not in the right format"
 parseMessage :: String -> LogMessage
 parseMessage = parseWords . words
   where
@@ -69,5 +69,5 @@ insertAtTimestamp message ts _ = Node Leaf message Leaf
 -- >>> inOrder tree
 -- [LogMessage Warning 4 "info",LogMessage Info 5 "info"]
 inOrder :: MessageTree -> [LogMessage]
-inOrder (Node left curr right) = (inOrder left) ++ [curr] ++ (inOrder right)
+inOrder (Node left curr right) = inOrder left ++ [curr] ++ inOrder right
 inOrder Leaf = []

@@ -20,6 +20,7 @@ toDigitsRev n
   | n <= 0 = []
   | otherwise = toDigitsRev' n
 
+toDigitsRev' :: Integer -> [Integer]
 toDigitsRev' n
   | n < 10 = [n]
   | otherwise =
