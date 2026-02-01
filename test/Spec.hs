@@ -8,5 +8,6 @@ main =
       "src/LogAnalysis.hs",
       "src/Golf.hs",
       "src/Homework4.hs",
-      "src/Calc.hs"
+      "src/Calc.hs",
+      "src/JoinList.hs"
     ]
