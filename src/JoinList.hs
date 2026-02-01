@@ -8,6 +8,7 @@ module JoinList
   )
 where
 
+import Data.Foldable ()
 import Sized
 
 -- |
@@ -52,13 +53,13 @@ bsearch p jl
       | otherwise = go (skipped <> tag xs) ys
 
 -- $setup
--- >>> let jl = Single (Size 1) 'a' +++ Single (Size 1) 'b' +++ Single (Size 1) 'c'
+-- >>> let jl = Single (Size 1) "a" +++ Single (Size 1) "b" +++ Single (Size 1) "c"
 
 -- |
 -- >>> indexJ 0 jl
--- Just 'a'
+-- Just "a"
 -- >>> indexJ 2 jl
--- Just 'c'
+-- Just "c"
 -- >>> indexJ 3 jl
 -- Nothing
 indexJ :: (Sized b, Monoid b) => Int -> JoinList b a -> Maybe a
@@ -67,9 +68,9 @@ indexJ i = bsearch $ (i <) . getSize . size
 -- |
 -- >>> dropJ 0 jl == jl
 -- True
--- >>> dropJ 1 jl == Single (Size 1) 'b' +++ Single (Size 1) 'c'
+-- >>> dropJ 1 jl == Single (Size 1) "b" +++ Single (Size 1) "c"
 -- True
--- >>> dropJ 2 jl == Single (Size 1) 'c'
+-- >>> dropJ 2 jl == Single (Size 1) "c"
 -- True
 -- >>> dropJ 3 jl
 -- Empty
@@ -79,7 +80,7 @@ dropJ :: (Sized b, Monoid b) => Int -> JoinList b a -> JoinList b a
 dropJ _ Empty = Empty
 dropJ n jl
   | n <= 0 = jl
-dropJ n (Single _ _) = Empty
+dropJ _ (Single _ _) = Empty
 dropJ n (Append t xs ys)
   | tSize <= n = Empty
   | n <= xsSize = dropJ n xs +++ ys
@@ -91,9 +92,9 @@ dropJ n (Append t xs ys)
 -- |
 -- >>> takeJ 0 jl
 -- Empty
--- >>> takeJ 1 jl == Single (Size 1) 'a'
+-- >>> takeJ 1 jl == Single (Size 1) "a"
 -- True
--- >>> takeJ 2 jl == Single (Size 1) 'a' +++ Single (Size 1) 'b'
+-- >>> takeJ 2 jl == Single (Size 1) "a" +++ Single (Size 1) "b"
 -- True
 -- >>> takeJ 3 jl == jl
 -- True
@@ -101,9 +102,9 @@ dropJ n (Append t xs ys)
 -- True
 takeJ :: (Sized b, Monoid b) => Int -> JoinList b a -> JoinList b a
 takeJ _ Empty = Empty
-takeJ n jl
+takeJ n _
   | n <= 0 = Empty
-takeJ n jl@(Single _ _) = jl
+takeJ _ jl@(Single _ _) = jl
 takeJ n jl@(Append t xs ys)
   | tSize <= n = jl
   | n <= xsSize = takeJ n xs
@@ -111,3 +112,25 @@ takeJ n jl@(Append t xs ys)
   where
     tSize = getSize . size $ t
     xsSize = getSize . size . tag $ xs
+
+instance Functor (JoinList m) where
+  fmap _ Empty = Empty
+  fmap f (Single t a) = Single t (f a)
+  fmap f (Append t l1 l2) = Append t (fmap f l1) (fmap f l2)
+
+instance (Monoid m) => Semigroup (JoinList m a) where
+  (<>) = (+++)
+
+instance (Monoid m) => Monoid (JoinList m a) where
+  mempty = Empty
+
+-- |
+-- >>> import Data.Foldable (fold)
+-- >>> fold jl
+-- "abc"
+-- >>> foldMap (:[]) jl
+-- ["a","b","c"]
+instance (Monoid m) => Foldable (JoinList m) where
+  foldMap _ Empty = mempty
+  foldMap p (Single _ x) = p x
+  foldMap p (Append _ xs ys) = foldMap p xs <> foldMap p ys

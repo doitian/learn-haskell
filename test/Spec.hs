@@ -9,5 +9,7 @@ main =
       "src/Golf.hs",
       "src/Homework4.hs",
       "src/Calc.hs",
-      "src/JoinList.hs"
+      "src/JoinList.hs",
+      "src/Scrabble.hs",
+      "src/ScrabbleBuffer.hs"
     ]

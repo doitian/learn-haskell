@@ -1,9 +1,12 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module Sized where
-
-import Data.Monoid
+module Sized
+  ( Size (..),
+    getSize,
+    Sized (..),
+  )
+where
 
 newtype Size = Size Int
   deriving (Eq, Ord, Show, Num)
