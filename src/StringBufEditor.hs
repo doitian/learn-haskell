@@ -1,8 +1,9 @@
-module Main where
+module Main (main) where
 
-import StringBuffer
+import StringBuffer ()
 import Editor
 
+main :: IO ()
 main = runEditor editor $ unlines
          [ "This buffer is for notes you don't want to save, and for"
          , "evaluation of steam valve coefficients."

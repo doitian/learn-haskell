@@ -1,7 +1,12 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving
            , ScopedTypeVariables
    #-}
-module Editor where
+module Editor
+  ( Command(..)
+  , Editor
+  , runEditor
+  , editor
+  ) where
 
 import System.IO
 
@@ -11,11 +16,10 @@ import Control.Exception
 import Control.Monad.State
 import Control.Monad (when, zipWithM_)
 
-import Control.Applicative
 import Control.Arrow       (first, second)
 
 import Data.Char
-import Data.List
+import Data.List (find)
 
 -- Editor commands
 
@@ -38,7 +42,7 @@ commands = map show [View, Edit, Next, Prev, Quit]
 newtype Editor b a = Editor (StateT (b,Int) IO a)
   deriving (Functor, Applicative, Monad, MonadIO, MonadState (b,Int))
 
-runEditor :: Buffer b => Editor b a -> b -> IO a
+runEditor :: Editor b a -> b -> IO a
 runEditor (Editor e) b = evalStateT e (b,0)
 
 getCurLine :: Editor b Int
@@ -50,8 +54,8 @@ setCurLine = modify . second . const
 onBuffer :: (b -> a) -> Editor b a
 onBuffer f = gets (f . fst)
 
-getBuffer :: Editor b b
-getBuffer = onBuffer id
+_getBuffer :: Editor b b
+_getBuffer = onBuffer id
 
 modBuffer :: (b -> b) -> Editor b ()
 modBuffer = modify . first
@@ -87,7 +91,9 @@ getCommand = io $ readCom <$> getLine
                        | toUpper c == 'L' = Load (unwords $ words cs)
                        | c == '?' = Help
                        | otherwise = maybe Noop read $
-                                       find ((== toUpper c) . head) commands
+                                       find (maybe False (== toUpper c) . safeHead) commands
+    safeHead [] = Nothing
+    safeHead (x:_) = Just x
 
 doCommand :: Buffer b => Command -> Editor b ()
 doCommand View = do
@@ -135,8 +141,9 @@ doCommand Help = io . putStr . unlines $
 
 doCommand Noop = return ()
 
-inBuffer :: Buffer b => Int -> Editor b Bool
-inBuffer n = do
+-- | Check if line number is within buffer bounds
+_inBuffer :: Buffer b => Int -> Editor b Bool
+_inBuffer n = do
   nl <- onBuffer numLines
   return (n >= 0 && n < nl)
 

@@ -1,7 +1,6 @@
 {-# LANGUAGE FlexibleInstances, TypeSynonymInstances #-}
-module StringBuffer where
-
-import Data.Monoid
+{-# OPTIONS_GHC -Wno-orphans #-}
+module StringBuffer (safeIndex) where
 
 import Buffer
 
