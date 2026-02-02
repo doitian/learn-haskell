@@ -11,5 +11,6 @@ main =
       "src/Calc.hs",
       "src/JoinList.hs",
       "src/Scrabble.hs",
-      "src/ScrabbleBuffer.hs"
+      "src/ScrabbleBuffer.hs",
+      "src/Party.hs"
     ]

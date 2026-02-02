@@ -1,3 +1,5 @@
+module LogAnalysis where
+
 data MessageType
   = Info
   | Warning
