@@ -12,5 +12,6 @@ main =
       "src/JoinList.hs",
       "src/Scrabble.hs",
       "src/ScrabbleBuffer.hs",
-      "src/Party.hs"
+      "src/Party.hs",
+      "src/Typeclassopedia.hs"
     ]
