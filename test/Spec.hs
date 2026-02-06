@@ -13,5 +13,6 @@ main =
       "src/Scrabble.hs",
       "src/ScrabbleBuffer.hs",
       "src/Party.hs",
-      "src/Typeclassopedia.hs"
+      "src/Typeclassopedia.hs",
+      "src/TryMonad.hs"
     ]
