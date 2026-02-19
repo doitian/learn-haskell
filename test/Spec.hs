@@ -16,5 +16,6 @@ main =
       "src/Typeclassopedia.hs",
       "src/TryMonad.hs",
       "src/AParser.hs",
-      "src/SExpr.hs"
+      "src/SExpr.hs",
+      "src/FistfulOfMonads.hs"
     ]
