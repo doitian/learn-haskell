@@ -18,5 +18,6 @@ main =
       "src/AParser.hs",
       "src/SExpr.hs",
       "src/FistfulOfMonads.hs",
-      "src/StateSExpr.hs"
+      "src/StateSExpr.hs",
+      "src/Risk.hs"
     ]
