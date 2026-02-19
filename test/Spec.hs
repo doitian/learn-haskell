@@ -17,5 +17,6 @@ main =
       "src/TryMonad.hs",
       "src/AParser.hs",
       "src/SExpr.hs",
-      "src/FistfulOfMonads.hs"
+      "src/FistfulOfMonads.hs",
+      "src/StateSExpr.hs"
     ]
