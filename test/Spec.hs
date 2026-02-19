@@ -15,5 +15,6 @@ main =
       "src/Party.hs",
       "src/Typeclassopedia.hs",
       "src/TryMonad.hs",
-      "src/AParser.hs"
+      "src/AParser.hs",
+      "src/SExpr.hs"
     ]
